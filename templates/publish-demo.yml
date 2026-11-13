@@ -1,0 +1,30 @@
+# Copy this file into an app repo as .github/workflows/publish-demo.yml
+# and change APP-SLUG below (ragflow, model-studio, langfuse, mlflow, workspace, ...).
+#
+# It copies ONLY the repo's demo/ folder into dkubeio/dkubex-website/<app-slug>/,
+# which GitHub Pages serves at https://dkubeio.github.io/dkubex-website/<app-slug>/.
+# demo/ must contain index.html and work as plain files (no server).
+name: Publish demo to dkubex-website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "demo/**"
+  workflow_dispatch:
+
+concurrency: publish-demo
+
+jobs:
+  publish:
+    runs-on: self-hosted   # or ubuntu-latest, to match the repo's other workflows
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push demo
+        uses: dkubeio/dkubex-website/.github/actions/push-demo@main
+        with:
+          app-slug: APP-SLUG
+          demo-dir: demo
+          app-id: ${{ secrets.DEMO_APP_ID }}
+          app-private-key: ${{ secrets.DEMO_APP_PRIVATE_KEY }}
