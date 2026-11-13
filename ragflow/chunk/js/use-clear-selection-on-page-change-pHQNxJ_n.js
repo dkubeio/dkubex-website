@@ -1,0 +1,1 @@
+import{r as s}from"./react-BAcIE6Gm.js";function o(u,t){const{current:e,pageSize:r}=u,n=s.useRef({current:e,pageSize:r});s.useEffect(()=>{const a=n.current;a.current===e&&a.pageSize===r||(n.current={current:e,pageSize:r},t())},[e,r,t])}export{o as u};

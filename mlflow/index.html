@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><link rel="shortcut icon" href="./static-files/favicon.ico"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="./static-files/manifest.json" crossorigin="use-credentials"/><title>MLflow demo · DKubeX</title><script>
+(async () => {
+  const sw = navigator.serviceWorker
+  const fail = (why) => {
+    if (!document.body) return addEventListener('DOMContentLoaded', () => fail(why))  // script runs in <head>
+    document.body.innerHTML = '<div style="font:16px/1.5 -apple-system,sans-serif;max-width:560px;margin:15vh auto;padding:0 16px">'
+      + '<h2>This demo can\'t start here</h2><p>' + why + '</p></div>'
+  }
+  if (location.protocol === 'file:') return fail('It was opened as a file (the address starts with <code>file://</code>). '
+    + 'Open it through a web server instead, for example: <code>python3 -m http.server</code>, then visit <code>http://localhost:8000</code>.')
+  if (!sw) return fail('This browser does not support service workers, or they are turned off (for example in a private window).')
+  window.addEventListener('unhandledrejection', (e) => fail('Startup error: ' + (e.reason?.message || e.reason)))
+  // The AI Assistant panel needs a live backend, so start with it closed.
+  // (MLflow auto-opens it on a first visit unless autoOpenedOnFirstLoad_v1 is already set.)
+  try {
+    if (!localStorage.getItem('mlflow.assistant.fab.autoOpenedOnFirstLoad_v1')) {
+      localStorage.setItem('mlflow.assistant.fab.autoOpenedOnFirstLoad_v1', 'true')
+      localStorage.setItem('mlflow.assistant.panelOpen_v1', 'false')
+    }
+  } catch {}
+  await sw.register('sw.js')
+  await sw.ready
+  if (!sw.controller) await new Promise((r) => sw.addEventListener('controllerchange', r, { once: true }))
+  const s = document.createElement('script'); s.src = 'static-files/static/js/main.00d66947.js'; document.head.appendChild(s)
+})()
+</script><link href="demo.css" rel="stylesheet"><link href="static-files/static/css/main.b0f58ef9.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root" class="mlflow-ui-container"></div><div id="modal" class="mlflow-ui-container"></div><div id="demo-banner">Interactive MLflow demo with sample data &mdash; changes are not saved. <a href="https://www.dkube.io" target="_blank" rel="noopener">Run MLflow on DKubeX &rarr;</a></div></body></html>

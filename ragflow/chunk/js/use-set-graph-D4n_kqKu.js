@@ -1,0 +1,1 @@
+import{r as o}from"./react-BAcIE6Gm.js";import{u as a}from"./store-DXylPhqY.js";const c=()=>{const{setEdges:r,setNodes:t}=a(s=>s);return o.useCallback(({nodes:s=[],edges:e=[]})=>{t(s),r(e)},[r,t])};export{c as u};

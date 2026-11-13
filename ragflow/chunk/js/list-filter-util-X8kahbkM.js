@@ -1,0 +1,1 @@
+function c(r,i,n){const e=[];return Array.isArray(r)&&r.forEach(t=>{const o=e.find(s=>s.id===t[i]);o?o.count+=1:e.push({id:t[i],label:t[n],count:1})}),e}function u(r,i,n){return{field:"owner",list:c(r,"tenant_id","nickname"),label:n!=null?n:"Owner"}}export{u as b,c as g};

@@ -1,0 +1,1 @@
+import{j as t}from"./react-BAcIE6Gm.js";function r({children:e}){return t.jsx("header",{"data-inspector-line":"21","data-inspector-column":"4","data-inspector-relative-path":"src/components/page-header.tsx",className:"flex justify-between items-center bg-text-title-invert p-5",children:e})}export{r as P};

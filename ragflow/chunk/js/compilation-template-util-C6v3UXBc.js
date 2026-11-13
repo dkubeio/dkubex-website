@@ -1,0 +1,1 @@
+import{C as r}from"./compilation-BJbLIYSn.js";import{l as t}from"./utils-C_cNHxH4.js";function n(a,e){return e===r.Artifacts?"Wiki":e===r.KnowledgeGraph?a("knowledgeCompilation.graph"):e===r.PageIndex?"PageIndex":e===r.MindMap?"Mindmap":t.capitalize(t.lowerCase(e))}const p=a=>!a;export{n as f,p as i};

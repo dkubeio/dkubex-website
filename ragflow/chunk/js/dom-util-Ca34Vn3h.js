@@ -1,0 +1,1 @@
+import{p as o}from"./dompurify-CQDvADFX.js";const i=r=>{const e=o.sanitize(r,{RETURN_DOM:!0});return e.querySelectorAll("img").forEach(t=>{t.replaceWith(document.createTextNode(t.outerHTML))}),e.innerHTML};export{i as s};

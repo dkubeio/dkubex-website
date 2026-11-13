@@ -1,0 +1,22 @@
+#demo-banner {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10000;
+  max-width: calc(100vw - 32px);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #11171c;
+  color: #e8ecf0;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+#demo-banner a {
+  color: #8acaff;
+  font-weight: 600;
+  margin-left: 6px;
+  text-decoration: none;
+}
+#demo-banner a:hover {
+  text-decoration: underline;
+}

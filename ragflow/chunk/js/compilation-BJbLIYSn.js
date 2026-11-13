@@ -1,0 +1,1 @@
+var e=(s=>(s.Artifacts="wiki",s.KnowledgeGraph="knowledge_graph",s.Timeline="timeline",s.PageIndex="page_index",s.Tree="tree",s.Empty="empty",s.MindMap="mind_map",s.SessionGraph="session_graph",s.SessionEssence="session_essence",s))(e||{});export{e as C};
