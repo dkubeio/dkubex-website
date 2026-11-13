@@ -1,0 +1,79 @@
+name: "Push App Demo"
+description: "Copies a repo's demo/ folder into dkubeio/dkubex-website/<app-slug>/ and pushes it"
+
+inputs:
+  app-slug:
+    description: "Folder name on the website, e.g. securellm (lowercase letters, numbers, dashes)"
+    required: true
+  demo-dir:
+    description: "Folder in the calling repo that holds the static pages"
+    required: false
+    default: "demo"
+  target-repo:
+    description: "owner/name of the website repo"
+    required: false
+    default: "dkubeio/dkubex-website"
+  app-id:
+    description: "GitHub App ID"
+    required: true
+  app-private-key:
+    description: "GitHub App private key (PEM)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check inputs
+      shell: bash
+      env:
+        SLUG: ${{ inputs.app-slug }}
+        SRC: ${{ inputs.demo-dir }}
+      run: |
+        set -euo pipefail
+        [[ "$SLUG" =~ ^[a-z0-9][a-z0-9-]*$ ]] || { echo "::error::app-slug must be lowercase letters, numbers, dashes"; exit 1; }
+        [ -f "$SRC/index.html" ] || { echo "::error::$SRC/index.html not found"; exit 1; }
+
+    - name: Get a token for the website repo
+      id: app-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.app-private-key }}
+        owner: dkubeio
+        repositories: dkubex-website
+
+    - name: Copy demo and push
+      shell: bash
+      env:
+        TOKEN: ${{ steps.app-token.outputs.token }}
+        SLUG: ${{ inputs.app-slug }}
+        SRC: ${{ inputs.demo-dir }}
+        REPO: ${{ inputs.target-repo }}
+      run: |
+        set -euo pipefail
+        SITE="$RUNNER_TEMP/dkubex-website"
+        rm -rf "$SITE"
+        git clone --depth 1 --branch main "https://x-access-token:${TOKEN}@github.com/${REPO}.git" "$SITE"
+
+        # Replace only this app's folder with the contents of demo/
+        rm -rf "$SITE/$SLUG"
+        mkdir -p "$SITE/$SLUG"
+        cp -R "$SRC/." "$SITE/$SLUG/"
+
+        cd "$SITE"
+        git config user.name  "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add -A "$SLUG"
+        if git diff --cached --quiet; then
+          echo "No changes for $SLUG"
+          exit 0
+        fi
+        git commit -m "demo: update $SLUG (${GITHUB_REPOSITORY}@${GITHUB_SHA:0:7})"
+
+        # Several repos may publish at once: rebase onto the latest main and retry.
+        for i in 1 2 3; do
+          git push origin main && exit 0
+          git pull --rebase origin main
+        done
+        echo "::error::Could not push after 3 tries"
+        exit 1

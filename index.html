@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DKubeX Demos</title>
+  <style>
+    :root { --bg:#f6f6f9; --card:#fff; --text:#16161c; --muted:#6b6b78; --border:#e4e4ec; --accent:#7660a8; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0f0f14; --card:#1a1a22; --text:#f1f1f6; --muted:#a0a0b0; --border:#2a2a35; --accent:#9d8bd6; }
+    }
+    body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width:960px; margin:0 auto; padding:48px 16px; }
+    h1 { margin:0 0 8px; font-size:28px; }
+    p.lead { color:var(--muted); margin:0 0 32px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .card { display:block; padding:20px; background:var(--card); border:1px solid var(--border); border-radius:12px; color:inherit; text-decoration:none; }
+    a.card:hover { border-color:var(--accent); }
+    .card h2 { margin:0 0 6px; font-size:18px; }
+    .card span { color:var(--muted); font-size:14px; }
+    .card.soon { opacity:.55; }
+    .card span { display:block; }
+    .tag { margin-top:10px; font-size:12px; color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DKubeX Demos</h1>
+    <p class="lead">Interactive previews of DKubeX applications. All data shown is sample data.</p>
+    <div class="grid">
+      <a class="card" href="securellm/"><h2>SecureLLM</h2><span>AI gateway: API keys, guardrails, usage and cost</span><div class="tag">Open demo →</div></a>
+      <div class="card soon"><h2>RAGFlow</h2><span>Chat with your documents</span><div class="tag">Coming soon</div></div>
+      <div class="card soon"><h2>Model Studio</h2><span>Deploy and manage models</span><div class="tag">Coming soon</div></div>
+      <div class="card soon"><h2>Langfuse</h2><span>LLM tracing and observability</span><div class="tag">Coming soon</div></div>
+      <div class="card soon"><h2>MLflow</h2><span>Experiment tracking and model registry</span><div class="tag">Coming soon</div></div>
+      <div class="card soon"><h2>Workspace</h2><span>Notebooks and development environments</span><div class="tag">Coming soon</div></div>
+    </div>
+  </main>
+</body>
+</html>
