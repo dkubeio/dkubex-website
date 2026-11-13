@@ -1,0 +1,370 @@
+/*-----------------------------------------------------------------------------
+| DKubeX workspace design tokens — THE single source of truth for this image.
+|
+| A hand port of the platform's tokens: dkubex/frontend/src/index.css, its :root
+| (light) and .dark blocks, copied verbatim. Ported rather than shared because
+| the platform is Tailwind v4 and this is dependency-free static CSS — we take
+| the tokens and the component look, not the framework.
+|
+| TOKEN NAMES ARE DELIBERATELY IDENTICAL TO THE PLATFORM'S. Do not "simplify"
+| them back toward the launcher's old --bg/--panel/--text names: the two
+| vocabularies collide. Here --muted is a muted SURFACE and --muted-foreground
+| is the text on it, whereas the launcher's old --muted was the text itself;
+| likewise --accent is the hover surface, not the brand colour (that is --brand
+| / --primary). Renaming would silently turn every muted label near-white.
+| Keeping the names means checking for drift is a literal diff against upstream.
+|
+| Consumed by all three of the image's themed surfaces, each over the same nginx
+| `alias /launcher/` (nginx/workspace.conf.template):
+|
+|     launcher/index.html            <link href="theme.css">
+|     terminal/templates/index.html  <link href="../theme.css">
+|     starter/app_loader.py          <link href="{root}theme.css">
+|
+| The terminal LINKS this file rather than importing it through webpack. That is
+| a build-ordering decision, not a style one: the Dockerfile builds /terminal
+| before it copies /launcher, so bundling would drag the palette above the npm
+| install and all nine agent-CLI layers, and a one-hex-digit tweak would rebuild
+| ~25 minutes of image. Linking also means a palette edit needs no npm at all.
+|
+| Keep this file free of url() — see the note in fonts.css.
+|
+| Theme switching is the platform's: the `dkubex-ui-theme` localStorage key,
+| applied as a `light`/`dark` CLASS on <html>. Default dark. The contract is
+| dkubex/backend/app/skills/package-app/references/theming.md; the runtime is
+| launcher/theme.js (and terminal/src/theme.ts).
+|----------------------------------------------------------------------------*/
+
+/* ── Light ─────────────────────────────────────────────────────────────── */
+:root {
+  --radius: 0.625rem;
+
+  /* Core palette — DKube brand purple (#7660A8) */
+  --background: #edecf2;
+  --foreground: #16161c;
+  --card: #ffffff;
+  --card-foreground: #16161c;
+  --popover: #ffffff;
+  --popover-foreground: #16161c;
+  --primary: #7660a8;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f1f6;
+  --secondary-foreground: #2a2a31;
+  --muted: #f1f1f6;
+  --muted-foreground: #8a8a99;
+  --accent: #eee8f6;
+  --accent-foreground: #533f80;
+  --destructive: #db4a4a;
+  --border: #e6e6ed;
+  --input: #e6e6ed;
+  --ring: #7660a8;
+
+  /* DKube brand purple ramp */
+  --brand: #7660a8;
+  --brand-strong: #65509a;
+  --brand-soft: #eee8f6;
+  --brand-foreground: #ffffff;
+  --gradient-brand: linear-gradient(135deg, #65509a 0%, #9384bd 100%);
+  --gradient-brand-soft: linear-gradient(135deg, #eee8f6 0%, #f6f3fb 100%);
+
+  /* Icon rail surface */
+  --rail: #f8f8fb;
+  --rail-foreground: #45454f;
+
+  /* App icon tile (neutral grey, theme-aware) */
+  --icon-tile: #f3f2f8;
+
+  /* Chart colors — brand-led (purple, blue, amber, green, red) */
+  --chart-1: #7660a8;
+  --chart-2: #3f9ad6;
+  --chart-3: #ef8f3c;
+  --chart-4: #2fa36a;
+  --chart-5: #db4a4a;
+
+  /* Sidebar */
+  --sidebar: #f8f8fb;
+  --sidebar-foreground: #16161c;
+  --sidebar-primary: #7660a8;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eee8f6;
+  --sidebar-accent-foreground: #533f80;
+  --sidebar-border: #e6e6ed;
+  --sidebar-ring: #7660a8;
+
+  /* Semantic colors */
+  --success: #2fa36a;
+  --success-foreground: #ffffff;
+  --warning: #e6b53d;
+  --warning-foreground: #2a2a31;
+  --info: #3f9ad6;
+  --info-foreground: #ffffff;
+
+  /* === Enterprise Design Tokens === */
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Shadows — cool, purple-tinted (rgba of #2C2145) */
+  --shadow-xs: 0 1px 2px rgba(44, 33, 69, 0.06);
+  --shadow-sm:
+    0 1px 3px rgba(44, 33, 69, 0.08), 0 1px 2px rgba(44, 33, 69, 0.05);
+  --shadow-md:
+    0 4px 12px rgba(44, 33, 69, 0.08), 0 2px 4px rgba(44, 33, 69, 0.05);
+  --shadow-lg:
+    0 12px 28px rgba(44, 33, 69, 0.12), 0 4px 8px rgba(44, 33, 69, 0.06);
+  --shadow-brand: 0 12px 32px rgba(118, 96, 168, 0.3);
+
+  /* Focus ring */
+  --ring-width: 2px;
+  --ring-offset: 2px;
+
+  /* Selection */
+  --selection-bg: color-mix(in oklab, var(--brand) 20%, transparent);
+  --selection-text: inherit;
+
+  /* Scrollbar */
+  --scrollbar-thumb: oklch(0.75 0 0);
+  --scrollbar-track: transparent;
+}
+
+/* ── Dark ──────────────────────────────────────────────────────────────── */
+.dark {
+  --background: #16161c;
+  --foreground: #f1f1f6;
+  --card: #1f1f27;
+  --card-foreground: #f1f1f6;
+  --popover: #1f1f27;
+  --popover-foreground: #f1f1f6;
+  --primary: #9384bd;
+  --primary-foreground: #16161c;
+  --secondary: #2a2a31;
+  --secondary-foreground: #f1f1f6;
+  --muted: #2a2a31;
+  --muted-foreground: #b4b4c1;
+  --accent: #2c2145;
+  --accent-foreground: #ddd2ec;
+  --destructive: #e36a6a;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #9384bd;
+
+  /* DKube brand purple ramp — dark */
+  --brand: #9384bd;
+  --brand-strong: #7660a8;
+  --brand-soft: #2c2145;
+  --brand-foreground: #16161c;
+  --gradient-brand: linear-gradient(135deg, #65509a 0%, #9384bd 100%);
+  --gradient-brand-soft: linear-gradient(135deg, #2c2145 0%, #1f1f27 100%);
+
+  /* Icon rail surface — dark */
+  --rail: #0d0d12;
+  --rail-foreground: #b4b4c1;
+
+  /* App icon tile (neutral grey, theme-aware) */
+  --icon-tile: #242129;
+
+  --chart-1: #9384bd;
+  --chart-2: #56a9de;
+  --chart-3: #f0a05a;
+  --chart-4: #36b377;
+  --chart-5: #e36a6a;
+
+  --sidebar: #0d0d12;
+  --sidebar-foreground: #f1f1f6;
+  --sidebar-primary: #9384bd;
+  --sidebar-primary-foreground: #16161c;
+  --sidebar-accent: #2c2145;
+  --sidebar-accent-foreground: #ddd2ec;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #9384bd;
+
+  /* Semantic colors — dark */
+  --success: #36b377;
+  --success-foreground: #16161c;
+  --warning: #ecc558;
+  --warning-foreground: #16161c;
+  --info: #56a9de;
+  --info-foreground: #16161c;
+
+  /* Shadows — deeper for dark backgrounds */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.55), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-brand: 0 12px 32px rgba(118, 96, 168, 0.45);
+
+  --selection-bg: color-mix(in oklab, var(--brand) 35%, transparent);
+  --scrollbar-thumb: #45454f;
+}
+
+/* ── Scales the platform expresses through Tailwind ────────────────────────
+   These live in its `@theme inline` block, which resolves calc() at build time.
+   We have no build step, so they are written out. Values match exactly. */
+:root {
+  --radius-sm: calc(var(--radius) - 4px);    /* 6px  */
+  --radius-md: calc(var(--radius) - 2px);    /* 8px  */
+  --radius-lg: var(--radius);                /* 10px */
+  --radius-xl: calc(var(--radius) + 4px);    /* 14px */
+  --radius-2xl: calc(var(--radius) + 18px);  /* 28px */
+  --radius-pill: 999px;
+
+  /* Faces come from fonts.css, which every page links separately. Each stack
+     keeps a real fallback: we ship only the latin subset, so anything outside
+     it falls through here rather than rendering as tofu. */
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ── Workspace-only tokens ─────────────────────────────────────────────────
+   Derived from the platform's, for surfaces the platform does not have. */
+:root {
+  --tile-shadow: var(--shadow-sm);
+}
+.dark {
+  /* The platform's AppRail tile treatment: a raised surface that reads against
+     the near-black rail. The insets do nothing on a light ground, which is why
+     light gets the plain shadow above. */
+  --tile-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, .07),
+    inset 0 0 0 1px rgba(255, 255, 255, .035);
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────
+   The platform does this in @layer base with @apply. Same rules, plain CSS.
+   Deliberately NOT ported: its blanket transition on a/button/input/[tabindex].
+   This file is linked into the terminal page, where Lumino's tab bars and
+   xterm's helper textarea carry tabindex and a global transition makes dragging
+   a tab feel laggy. Per-surface transitions live in style.css / picker.css. */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+[role="button"] { cursor: pointer; }
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); color: var(--foreground); }
+h1 { font-size: 1.875rem; font-weight: 700; line-height: 1.2;  letter-spacing: -0.025em; }
+h2 { font-size: 1.5rem;   font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+h3 { font-size: 1.25rem;  font-weight: 600; line-height: 1.3;  letter-spacing: -0.015em; }
+h4 { font-size: 1.125rem; font-weight: 600; line-height: 1.35; }
+h5 { font-size: 1rem;     font-weight: 600; line-height: 1.4; }
+h6 { font-size: 0.875rem; font-weight: 600; line-height: 1.5; }
+
+::selection { background: var(--selection-bg); color: var(--selection-text); }
+
+* { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+*::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+/* ── Primitives ────────────────────────────────────────────────────────────
+   The handful of shadcn components the workspace actually reuses, flattened
+   into classes. Shared by the launcher and the terminal's folder picker so the
+   two stop drifting. Sizes are shadcn's defaults (h-9 / px-4 / rounded-md). */
+
+/* shadcn's focus treatment: the ring colour at 50%, 3px, plus a solid border.
+   Used via `.focus-ring` or copied inline where a component needs it on a
+   different element than the one that takes focus. */
+.focus-ring:focus-visible,
+.btn:focus-visible,
+.input:focus-visible {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast), box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.btn:disabled { opacity: .5; pointer-events: none; }
+
+.btn-primary { background: var(--primary); color: var(--primary-foreground); font-weight: 600; }
+.btn-primary:hover { background: color-mix(in oklab, var(--primary) 90%, transparent); }
+
+.btn-secondary { background: var(--secondary); color: var(--secondary-foreground); }
+.btn-secondary:hover { background: color-mix(in oklab, var(--secondary) 80%, transparent); }
+
+.btn-outline { border-color: var(--border); background: var(--background); box-shadow: var(--shadow-xs); }
+.btn-outline:hover { background: var(--accent); color: var(--accent-foreground); }
+
+.btn-ghost { color: var(--muted-foreground); }
+.btn-ghost:hover { background: var(--accent); color: var(--accent-foreground); }
+
+.input {
+  height: 36px;
+  width: 100%;
+  padding: 4px 12px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.input::placeholder { color: var(--muted-foreground); }
+
+/* Popover surface — context menus, the picker's dropdown. */
+.menu {
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: var(--shadow-md);
+}
+.menu-item {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.menu-item:hover { background: var(--accent); color: var(--accent-foreground); }
+.menu-item.danger { color: var(--destructive); }

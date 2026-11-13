@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unsloth Studio · Workspace demo</title>
+  <script>
+    (function () {
+      var t = "dark";
+      try { t = localStorage.getItem("dkubex-ui-theme") || "dark"; } catch (e) {}
+      if (t === "system") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.classList.add(t === "light" ? "light" : "dark");
+    })();
+  </script>
+  <link rel="stylesheet" href="../fonts.css">
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../demo.css">
+</head>
+<body class="preview">
+<main class="pv">
+<header class="pv-head"><span class="pv-badge"><img alt=""></span><div><h1>Unsloth Studio</h1><p>Fine-tune &amp; run LLMs</p><div class="pv-tags"><span class="pv-tag">Workspace</span><span class="pv-tag">Developer Tools</span></div></div></header>
+<section class="pv-panel"><h2>What you get</h2><ul class="pv-list"><li>Fine-tune and run open LLMs from a web interface</li><li>Uses the GPU when the workspace has one, and the CPU otherwise</li><li>Signs you in automatically</li></ul></section>
+<div class="pv-live"><span aria-hidden="true">ⓘ</span><span>This is a static preview. In a live DKubeX workspace, <strong>Unsloth Studio</strong> opens right here: it starts the first time you click it and keeps running while you switch between apps.</span></div>
+</main>
+<script src="../theme.js"></script>
+<script>
+  // Swap to the light/dark logo variant when the theme changes (as app.js does).
+  var badge = document.querySelector(".pv-badge img");
+  function themedIcon() {
+    var dark = document.documentElement.classList.contains("dark");
+    badge.src = "../icons/" + (dark ? "unsloth.svg" : "unsloth.svg");
+  }
+  themedIcon();
+  window.addEventListener("dkubex-theme", themedIcon);
+</script>
+
+</body>
+</html>

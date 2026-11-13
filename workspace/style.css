@@ -1,0 +1,316 @@
+/*-----------------------------------------------------------------------------
+| Launcher UI. A macOS-style shell: a left rail (dock) + a stage.
+|
+| The palette, typography, radii, shadows and shared primitives (.btn, .menu,
+| .focus-ring) all come from theme.css, which index.html links first. This file
+| holds only what is specific to the launcher's own layout. Do not reintroduce
+| colour literals here — every one of them belongs in a token.
+|
+| The rail and the app grid are deliberate copies of the platform's own shell
+| (Shell/AppRail.tsx and MyApps/UserMyApps.tsx) down to the geometry: an 84px
+| rail of 48px tiles at radius 14, and a grid of vertical tiles with an 80px
+| icon holder at radius 18. Keep them in step.
+|----------------------------------------------------------------------------*/
+
+html, body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Side rail (dock) ──────────────────────────────────────────────────────── */
+.rail {
+  flex: 0 0 84px;
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  background: var(--rail);
+  border-right: 1px solid var(--border);
+  z-index: 20;
+}
+
+.rail-tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 14px;
+  background: var(--icon-tile);
+  box-shadow: var(--tile-shadow);
+  color: var(--rail-foreground);
+  cursor: pointer;
+  transition: transform var(--transition-fast), color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.rail-tile:hover { transform: scale(1.05); color: var(--foreground); }
+.rail-tile:focus-visible {
+  outline: none;
+  box-shadow: var(--tile-shadow), 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+.rail-tile.ghost { background: transparent; box-shadow: none; }
+.rail-tile.ghost:hover { background: var(--secondary); }
+.rail-tile.ghost:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+.rail-tile img { width: 34px; height: 34px; object-fit: contain; }
+
+.rail-tile.active { color: var(--foreground); }
+/* Active pip, flush to the rail's left edge like the platform's. */
+.rail-tile.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  border-radius: 0 3px 3px 0;
+  background: var(--brand);
+}
+
+/* Running indicator: a dot on the tile's TOP-RIGHT corner when the app's backend
+   process is RUNNING. It used to straddle the left edge, which only worked while
+   the active pip was pushed outside the rail at left:-12px; now that the pip sits
+   flush at left:0 (matching the platform) the two would collide, so the dot moved
+   to the opposite corner where it can never overlap. The rail-coloured ring keeps
+   it legible where it overhangs the tile. */
+.rail-tile.running::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 2px var(--rail);
+  pointer-events: none;
+}
+
+/* pinned apps read as permanently docked with a subtle tint. */
+.rail-tile.pinned { background: var(--accent); }
+
+.rail-divider {
+  width: 32px;
+  height: 1px;
+  margin: 2px 0;
+  background: var(--border);
+}
+
+.dock {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.dock::-webkit-scrollbar { width: 0; }
+
+/* brand tile icon sits a touch smaller than the dock app icons */
+#brand img { width: 26px; height: 26px; }
+
+/* theme toggle shows one icon per theme */
+#theme-toggle .icon-sun { display: none; }
+:root.light #theme-toggle .icon-moon { display: none; }
+:root.light #theme-toggle .icon-sun { display: block; }
+
+/* ── Stage ─────────────────────────────────────────────────────────────────── */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.catalog {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--background);
+}
+
+.catalog .head, .catalog .section-label, .catalog .grid {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 56px;
+  padding-right: 56px;
+}
+
+/* h1's face, size and tracking come from theme.css (Sora). */
+.head h1 {
+  margin: 0;
+  padding-top: 48px;
+  text-align: center;
+}
+
+/* Centred search, like the platform's home screen. Deliberately NOT part of the
+   padded container rule above: it centres on its own width, and inheriting that
+   56px padding would push the absolutely-positioned magnifier out of the box. */
+.search {
+  position: relative;
+  width: 460px;
+  max-width: calc(100% - 112px);
+  margin: 28px auto 0;
+}
+.search svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+.search input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search input::placeholder { color: var(--muted-foreground); }
+.search input:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+.section-label {
+  margin: 28px auto 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  padding-bottom: 56px;
+}
+
+/* Vertical app tile: icon holder above a centred label. The description is a
+   tooltip (app.js sets title=) — there is no room for it at this width. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border: 0;
+  border-radius: var(--radius-2xl);
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+.card:hover {
+  background: var(--accent);
+  transform: translateY(-3px);
+}
+.card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+.card .badge {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--icon-tile);
+}
+.card .badge img { width: 44px; height: 44px; object-fit: contain; }
+.card .meta { min-width: 0; max-width: 100%; }
+.card .name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.load-error { color: var(--muted-foreground); }
+
+/* ── Iframe host ───────────────────────────────────────────────────────────── */
+.frames { position: absolute; inset: 0; }
+.frames[hidden] { display: none; }
+
+.frame-wrap {
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+}
+.frame-wrap:not(.active) { display: none; }
+
+.app-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.frame-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--popover);
+  color: var(--muted-foreground);
+  font-size: 13px;
+  box-shadow: var(--shadow-lg);
+}
+.frame-pill[hidden] { display: none; }
+.frame-pill button {
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 7px 14px;
+  background: var(--primary);
+  /* NOT #fff: in dark theme --primary is the light end of the brand ramp and
+     --primary-foreground is near-black. White here was unreadable. */
+  color: var(--primary-foreground);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.frame-pill button:hover { background: color-mix(in oklab, var(--primary) 90%, transparent); }
+
+/* ── Rail context menu ─────────────────────────────────────────────────────── */
+/* .menu / .menu-item primitives come from theme.css; only placement is here. */
+.context-menu {
+  position: fixed;
+  z-index: 100;
+  min-width: 168px;
+}

@@ -1,0 +1,11 @@
+<!-- Fallback tile for an app a user built inside the workspace (starter/user_apps.py).
+     Same construction as default.svg — translucent fill + stroke + solid marks in one hue, so
+     it reads on both the light and dark launcher — but a distinct colour, so a user's own app
+     is never mistaken for a built-in one at a glance. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <rect x="2.5" y="3.5" width="19" height="17" rx="3.5" fill="#2fa36a" opacity="0.15" stroke="#2fa36a" stroke-width="1.2"/>
+  <path d="M2.5 8.5h19" stroke="#2fa36a" stroke-width="1.2"/>
+  <circle cx="5.6" cy="6" r="0.9" fill="#2fa36a"/>
+  <circle cx="8.4" cy="6" r="0.9" fill="#2fa36a"/>
+  <path d="M12 11.2l1.35 2.95 2.95 1.35-2.95 1.35L12 19.8l-1.35-2.95L7.7 15.5l2.95-1.35z" fill="#2fa36a"/>
+</svg>
